@@ -5,9 +5,19 @@
     <h1><%= title %></h1>
     <form action="/create" method="post">
       <label for="firstName">First Name: </label>
-      <input type="text" name="firstName" id="firstName" />
+      <input
+        type="text"
+        name="firstName"
+        id="firstName"
+        value="<%= locals.user ? user.firstName : '' %>"
+      />
       <label for="lastName">Last Name: </label>
-      <input type="text" name="lastName" id="lastName" />
+      <input
+        type="text"
+        name="lastName"
+        id="lastName"
+        value="<%= locals.user ? user.lastName : '' %>"
+      />
       <button type="submit">Submit</button>
     </form>
     <%- include('partials/errors.ejs') %>

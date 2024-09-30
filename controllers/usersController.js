@@ -30,23 +30,25 @@ const validateUser = [
 const usersCreatePost = [
   validateUser,
   (req, res) => {
+    const { firstName, lastName } = req.body;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res
-        .status(400)
-        .render('createUser', { title: 'Create user', errors: errors.array() });
+      return res.status(400).render('createUser', {
+        title: 'Create user',
+        user: { firstName, lastName },
+        errors: errors.array(),
+      });
     }
-    const { firstName, lastName } = req.body;
     usersStorage.addUser({ firstName, lastName });
     res.redirect('/');
   },
 ];
 
 function usersUpdateGet(req, res) {
-  console.log('ID: ', req.params);
+  const user = usersStorage.getUser(req.params.id);
   res.render('updateUser', {
-    user: { id: req.params.id },
     title: 'Update user',
+    user,
   });
 }
 
@@ -54,15 +56,15 @@ const usersUpdatePost = [
   validateUser,
   (req, res) => {
     const id = req.params.id;
+    const { firstName, lastName } = req.body;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).render('updateUser', {
         title: 'Update user',
-        user: { id },
+        user: { id, firstName, lastName },
         errors: errors.array(),
       });
     }
-    const { firstName, lastName } = req.body;
     usersStorage.updateUser(id, { firstName, lastName });
     res.redirect('/');
   },

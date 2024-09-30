@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <%- include('partials/head.ejs') %>
+  <body>
+    <h1><%= title %></h1>
+    <ul>
+      <% if (locals.users) { %>
+        <% users.forEach(user => { %>
+          <li>
+            <a href="<%= user.id %>/update">
+              ID: <%= user.id %>, Name: <%= user.firstName %> <%= user.lastName %>
+              <form action="/<%= user.id %>/delete" method="post">
+                <button type="submit">Delete</button>
+              </form>
+            </a>
+          </li>
+        <% }); %>
+      <% } %>
+    </ul>
+    <a href="/create">Create new user</a>
+  </body>
+</html>

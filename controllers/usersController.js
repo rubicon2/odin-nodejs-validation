@@ -7,7 +7,9 @@ function usersListGet(req, res) {
 }
 
 function usersCreateGet(req, res) {
-  res.render('createUser', { title: 'Create user' });
+  res.render('createUser', {
+    title: 'Create user',
+  });
 }
 
 const alphaError = 'must only contain letters';

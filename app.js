@@ -7,5 +7,11 @@ app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
 app.use('/', usersRouter);
 
+// Error handling.
+app.use((error, req, res, next) => {
+  console.error(error.stack);
+  res.status(500).render('error.ejs', { title: 'An Error Occurred!', error });
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => `Express app listening on port ${PORT}.`);

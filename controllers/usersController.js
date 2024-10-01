@@ -1,5 +1,6 @@
 const usersStorage = require('../storages/usersStorage');
 const { body, validationResult } = require('express-validator');
+const stringMatcher = require('../util/stringMatcher');
 
 function usersListGet(req, res) {
   res.render('index', { title: 'User list', users: usersStorage.getUsers() });
@@ -87,6 +88,42 @@ function usersDeletePost(req, res) {
   res.redirect('/');
 }
 
+function usersSearchGet(req, res) {
+  const { searchedName, searchedEmail } = req.query;
+  const [firstSearchedName, lastSearchedName] = searchedName.split(' ');
+  const allUsers = usersStorage.getUsers();
+  const searchResults = allUsers
+    .map((user) => {
+      const { firstName, lastName, email, bio } = user;
+      const matchResults = {
+        firstName: {
+          value: firstName,
+          ...stringMatcher(firstName, firstSearchedName),
+        },
+        lastName: {
+          value: lastName,
+          ...stringMatcher(lastName, lastSearchedName || firstSearchedName),
+        },
+        email: { value: email, ...stringMatcher(email, searchedEmail) },
+        bio: { value: bio, ...stringMatcher(bio, '') },
+      };
+      return {
+        ...matchResults,
+        avgMatchRating:
+          (matchResults.firstName.rating +
+            matchResults.lastName.rating +
+            matchResults.email.rating +
+            matchResults.bio.rating) /
+          4,
+      };
+    })
+    .filter((user) => user.avgMatchRating > 0)
+    .sort((a, b) => (a.lastName.value < b.lastName.value ? -1 : 1))
+    .sort((a, b) => (a.firstName.value < b.firstName.value ? -1 : 1))
+    .sort((a, b) => (a.avgMatchRating > b.avgMatchRating ? -1 : 1));
+  res.render('search', { title: 'Search results', searchResults });
+}
+
 module.exports = {
   usersListGet,
   usersCreateGet,
@@ -94,4 +131,5 @@ module.exports = {
   usersUpdateGet,
   usersUpdatePost,
   usersDeletePost,
+  usersSearchGet,
 };

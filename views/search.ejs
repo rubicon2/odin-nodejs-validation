@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+  <%- include('partials/head.ejs') %>
+  <body>
+    <h1>Search Results</h1>
+    <% if (locals.searchResults && searchResults.length > 0) { %>
+      <% searchResults.forEach(searchResult => { %>
+        <h2>
+          <%= searchResult.firstName.value %> <%= searchResult.lastName.value %>
+          <span><%= Math.round(searchResult.avgMatchRating * 100) %>% match</span>
+        </h2>
+        <div>
+          First name: <%= searchResult.firstName.value %>, 
+          <span><%= Math.round(searchResult.firstName.rating * 100) %>% match</span>
+        </div>
+        <div>
+          Last name: <%= searchResult.lastName.value %>, 
+          <span><%= Math.round(searchResult.lastName.rating * 100) %>% match</span>
+        </div>
+        <div>
+          Email: <%= searchResult.email.value %>, 
+          <span><%= Math.round(searchResult.email.rating * 100) %>% match</span>
+        </div>
+        <div>
+          Bio: <%= searchResult.bio.value %>, 
+          <span><%= Math.round(searchResult.bio.rating * 100) %>% match</span>
+        </div>
+      <% }) %>
+    <% } else { %>
+      <p>No users found.</p>
+    <% } %>
+    <a href="/">Back to home</a>
+  </body>
+</html>

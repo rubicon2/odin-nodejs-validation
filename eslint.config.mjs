@@ -4,7 +4,11 @@ import eslintConfigPrettier from 'eslint-config-prettier';
 
 export default [
   eslintConfigPrettier,
-  { files: ['**/*.js'], languageOptions: { sourceType: 'commonjs' } },
+  {
+    files: ['**/*.js'],
+    ignores: ['**/*.test.js'],
+    languageOptions: { sourceType: 'commonjs' },
+  },
   { languageOptions: { globals: globals.node } },
   pluginJs.configs.recommended,
 ];
